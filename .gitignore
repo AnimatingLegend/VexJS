@@ -1,18 +1,22 @@
 # Dependencies
 node_modules/
 
-# Operating System
-.DS_Store
-Thumbs.db
-desktop.ini
+# Documentation
+docs/GEMINI.md
+docs/MILESTONE.md
 
 # Editor
 .idea/
 *.swp
 
-# Logs
-npm-debug.log*
-*.log
-
-# Env
+# Environment
 .env
+
+# Operating System
+.DS_Store
+desktop.ini
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*

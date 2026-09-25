@@ -3,6 +3,16 @@ description: Suggest a new feature.
 labels: ["type: enhancement", "status: pending review"]
 title: "Enhancement: "
 body:
+  - type: markdown
+    attributes:
+      value: "## Please follow the guidelines listed below before making your Issue."
+  - type: checkboxes
+    attributes:
+      label: Issue Checklist
+      options:
+        - label: I have read the [Contributing Guide](https://github.com/AnimatingLegend/VexJS/blob/docs/vex-guidelines/docs/CONTRIBUTING.md)
+        - label: I have properly titled my enhancement
+
   - type: textarea
     attributes:
       label: What is your suggestion, and why should it be implemented?

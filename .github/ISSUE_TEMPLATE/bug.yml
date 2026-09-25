@@ -5,12 +5,38 @@ title: "Bug Report: "
 body:
   - type: markdown
     attributes:
+      value: "## Please follow the guidelines listed below before making your Issue."
+  - type: checkboxes
+    attributes:
+      label: Issue Checklist
+      options:
+        - label: I have read the [Contributing Guide](https://github.com/AnimatingLegend/VexJS/blob/docs/vex-guidelines/docs/CONTRIBUTING.md)
+        - label: I have properly titled my issue
+
+  - type: input
+    attributes:
+      label: Version
+      description: Which version are you running?
+      placeholder: ex. 1.0.0 or 1.1.0-develop
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
       value: "## Describe your bug."
 
   - type: textarea
     attributes:
-      label: "Description (include any images, errors, etc.)"
+      label: "Description (include any images, code snippets, errors, etc.)"
       description: Provide a detailed description of your bug.
       placeholder: Describe your bug here...
     validations:
       required: true
+
+  - type: textarea
+    attributes:
+      label: "Steps to Reproduce"
+      description: Is there a method to reliably reproduce it?
+      placeholder: 1.
+    validations:
+      required: false
