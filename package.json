@@ -1,6 +1,6 @@
 {
   "name": "vex.js",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Vector Element Xpansion - A lightweight 2D JavaScript game engine.",
   "homepage": "https://github.com/AnimatingLegend/VexJS#readme",
   "bugs": {
