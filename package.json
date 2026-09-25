@@ -14,11 +14,31 @@
   "author": "Aaron Augustin",
   "type": "module",
   "main": "index.js",
+  "files": [
+    "source",
+    "index.js",
+    "README.md",
+    "LICENSE.md"
+  ],
+  "keywords": [
+    "game-engine",
+    "2d",
+    "canvas",
+    "html5-game",
+    "gamedev"
+  ],
   "scripts": {
-    "format": "prettier --write",
-    "test": "npx serve ."
+    "dev": "serve .",
+    "start": "serve .",
+    "fmt": "prettier --write .",
+    "fmt:check": "prettier --check .",
+    "lint": "eslint .",
+    "test": "vitest run"
   },
   "devDependencies": {
-    "prettier": "^3.9.9"
+    "eslint": "^10.11.0",
+    "prettier": "^3.9.9",
+    "serve": "^14.2.6",
+    "vitest": "^5.0.2"
   }
 }
