@@ -58,7 +58,7 @@ feat/impl-text-rendering
 
 > [!IMPORTANT]
 >
-> When editing your code, it is ideal that it follows the **[Programming Style Guide](../source/) (COMING SOON)**.
+> When editing your code, it is ideal that it follows the **[Programming Style Guide](./CODE_STYLE_GUIDE.md)**.
 > This keeps your code consistent with the rest of the codebase.
 
 If you're adding a feature to an already existing class, make sure to test your changes in the corresponding `/test/[specified-test-directory]/name.js`, or create a new directory and file under `test/` to keep the work space clean and concise for you, and other contributors.
@@ -120,7 +120,7 @@ Keep your PR's clean and concise to make reviewing easier for the developers.
 Merge conflics are usually small modifications done to files that may overlap with pull requests or commits. This can easily be avoided by fixing them in your code editor, or on the GitHub page itself.
 
 - If we require changes to your PR, we will label your PR `status: needs revision`.
-- Following the `status needs revision` label, we will also leave a comment stating some of the changes you should make.
+- Following the `status: needs revision` label, we will also leave a comment stating some of the changes you should make.
 - If you receive a comment, you have 30 - 60 days to implement the requested changes.
 - If you dont submit the changes on time, your PR will be closed for inactivity, and labeled as `status: state`.
 
@@ -134,6 +134,6 @@ When the `main` branch is active, your PR may fall behind when it comes to commi
 ## Final Notes
 
 This project is meant to be simple, clean and easy to build upon.
-Contributions that improve the engines, functionality, and readability are always appreciated
+Contributions that improve the engines, functionality, and readability are always appreciated.
 
 **Thank you for contributing! ദ്ദി◝ ⩊ ◜)**
