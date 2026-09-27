@@ -2,6 +2,12 @@ import VexTween from "./tweens/VexTween.js";
 import VexCamera from "./VexCamera.js";
 import VexGlobal from "./VexGlobal.js";
 
+/**
+ * @file VexGame.js
+ *
+ * Runs the game loop and coordinates updates and drawing. Fixed-step updates
+ *  keep game behavior consistent across different display frame rates.
+ */
 export default class VexGame {
   constructor({
     width = 640,
@@ -29,6 +35,7 @@ export default class VexGame {
     VexGlobal.switchState(initialState);
   }
 
+  // Global release listeners keep input state correct when events end outside the canvas.
   _bindInput() {
     window.addEventListener("keydown", (e) => VexGlobal.keys._onKeyDown(e));
     window.addEventListener("keyup", (e) => VexGlobal.keys._onKeyUp(e));
@@ -40,25 +47,28 @@ export default class VexGame {
     window.addEventListener("mouseup", () => VexGlobal.mouse._onUp());
   }
 
+  // Reset the clock so restarting does not simulate time spent while stopped.
   start() {
     this._running = true;
     this._lastTime = performance.now();
     requestAnimationFrame(this._loop.bind(this));
   }
 
+  // Let the pending animation frame exit without scheduling another one.
   stop() {
     this._running = false;
   }
 
+  // Run fixed simulation steps while rendering once for each browser frame.
   _loop(now) {
     if (!this._running) return;
 
-    // Clamp to avoid spiral of death.
+    // Limit catch-up work after a paused or stalled frame.
     const frameTime = Math.min(0.25, (now - this._lastTime) / 1000);
     this._lastTime = now;
     this._accumulator += frameTime;
 
-    // Fixed timestep updates for determined physics.
+    // Fixed steps keep physics consistent across display frame rates.
     while (this._accumulator >= this.step) {
       this._update(this.step);
       this._accumulator -= this.step;

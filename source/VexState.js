@@ -4,9 +4,8 @@ import VexGroup from "./VexGroup.js";
 /**
  * @file VexState.js
  *
- * A screen/scene in the game.
- * Holds all its objects in one root `VexGroup` so `update()` and `draw()`
- *  cascade automatically.
+ * Represents a game screen or scene. A root group centralizes object updates
+ *  and drawing, while subclasses provide state-specific setup.
  */
 export default class VexState extends VexBasic {
   constructor() {
@@ -15,24 +14,26 @@ export default class VexState extends VexBasic {
     this.subState = null;
   }
 
+  // Keep state objects in the root group so updates and drawing stay centralized.
   add(object) {
     return this._group.add(object);
   }
 
+  // Delegate removal to the root group to preserve a single ownership path.
   remove(object) {
     return this._group.remove(object);
   }
 
-  /**
-   * Override this - called once when the state becomes active.
-   */
+  // Keep setup optional so simple states need no extra implementation.
   create() {}
 
+  // Give menus and overlays their own lifecycle without replacing the parent state.
   openSubState(subState) {
     this.subState = subState;
     subState.create();
   }
 
+  // Destroy the overlay first so it can release resources before being detached.
   closeSubState() {
     if (this.subState) this.subState.destroy();
     this.subState = null;

@@ -1,8 +1,8 @@
 /**
  * @file VexCamera.js
  *
- * Scroll offset, zoom, and flash/fade screen effets.
- *  Sprites read `scrollFactor` this to get parallax.
+ * Controls world scrolling, zoom, and screen fades.
+ * Keeping camera movement separate lets objects use different scroll factors for parallax.
  */
 export default class VexCamera {
   constructor(width, height) {
@@ -10,8 +10,8 @@ export default class VexCamera {
     this.height = height;
     this.scroll = { x: 0, y: 0 };
     this.zoom = 1;
-    this.target = null; // Sprite to follow
-    this.deadzone = null; // {x, y, width, height } in screen space, null = center-lock
+    this.target = null;
+    this.deadzone = null;
 
     this._flashAlpha = 0;
     this._flashColor = "#ffffff";
@@ -30,13 +30,12 @@ export default class VexCamera {
   follow(target, options = {}) {
     this.target = target;
     this.deadzone = options.deadzone ?? null;
-    // 'lock' = camera pinned exactly to the target, no delay (Mario-style)
-    // 'lerp' = camera eases toward the target over time (Sonic-style chase)
+    // Choose immediate or eased tracking to match the game's camera feel.
     this.followMode = options.mode || "lock";
-    // Only used when 'lerp' is called.
     this.followLerp = options.lerp ?? 0.1;
   }
 
+  // Use a timed overlay for visual feedback without adding a scene object.
   flash(color = "#ffffff", duration = 0.5, onComplete = null) {
     this._flashColor = color;
     this._flashDuration = duration;
@@ -45,6 +44,7 @@ export default class VexCamera {
     this._flashOnComplete = onComplete;
   }
 
+  // Fade the full screen independently of world objects during transitions.
   fade(color = "#000000", duration = 0.5, fadeIn = false, onComplete = null) {
     this._fadeColor = color;
     this._fadeDuration = duration;
@@ -93,7 +93,7 @@ export default class VexCamera {
     }
   }
 
-  // Applies the camera transforms to the canvas context before drawing world objects.
+  // Apply the world transform here so screen overlays can be drawn after it is restored.
   applyTransform(ctx) {
     ctx.save();
     ctx.scale(this.zoom, this.zoom);
@@ -104,7 +104,7 @@ export default class VexCamera {
     ctx.restore();
   }
 
-  // Draws flash/fade overlays. Call after `restoreTransform` so they cover the whole screen.
+  // Draw overlays after restoring the world transform so they cover the screen.
   drawOverlays(ctx) {
     if (this._flashAlpha > 0) {
       ctx.save();

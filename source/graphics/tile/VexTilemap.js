@@ -1,6 +1,12 @@
 import VexBasic from "../../VexBasic.js";
 import VexGlobal from "../../VexGlobal.js";
 
+/**
+ * @file VexTilemap.js
+ *
+ * Loads CSV tile data and draws only the visible portion of a map to keep
+ *  rendering costs low for large levels.
+ */
 export default class VexTilemap extends VexBasic {
   constructor(x = 0, y = 0) {
     super();
@@ -24,30 +30,38 @@ export default class VexTilemap extends VexBasic {
   draw(ctx, camera) {
     if (!this.visible || !this.tileSet) return;
 
+    // Skip off-screen columns so large maps do not require full-map drawing.
     const startCol = Math.max(
       0,
       Math.floor((camera.scroll.x - this.x) / this.tileWidth),
     );
+
+    // Clamp visible columns to the map boundary to avoid out-of-range tile reads.
     const endCol = Math.min(
       this.widthInTiles,
       Math.ceil((camera.scroll.x + camera.width - this.x) / this.tileWidth),
     );
 
+    // Skip off-screen rows so large maps do not require full-map drawing.
     const startRow = Math.max(
       0,
       Math.floor((camera.scroll.y - this.y) / this.tileHeight),
     );
+
+    // Clamp visible rows to the map boundary to avoid out-of-range tile reads.
     const endRow = Math.min(
       this.heightInTiles,
       Math.ceil((camera.scroll.y + camera.height - this.y) / this.tileHeight),
     );
 
+    // The atlas width sets how many tile graphics fit in each source row.
     const tilesetCols = Math.floor(this.tileSet.width / this.tileWidth);
 
+    // Restrict iteration to the visible region to keep rendering proportional to the viewport.
     for (let r = startRow; r < endRow; r++) {
       for (let c = startCol; c < endCol; c++) {
         const tileIndex = this.getTileIndex(c, r);
-        // 0 = empty space.
+        // Empty cells have no tile graphic to draw.
         if (tileIndex <= 0) continue;
 
         const graphicIndex = tileIndex - 1;
@@ -72,6 +86,7 @@ export default class VexTilemap extends VexBasic {
     }
   }
 
+  // Use a consistent sentinel so callers can detect coordinates outside the map.
   getTileIndex(col, row) {
     if (
       col < 0 ||
@@ -85,12 +100,14 @@ export default class VexTilemap extends VexBasic {
     return this.data[index];
   }
 
+  // Convert world positions to map cells for gameplay queries.
   getTileAt(worldX, worldY) {
     const col = Math.floor((worldX - this.x) / this.tileWidth);
     const row = Math.floor((worldY - this.y) / this.tileHeight);
     return this.getTileIndex(col, row);
   }
 
+  // Load the image and map data together so the tilemap is ready to draw on return.
   async loadMapFromCSV(csvData, tilesetPath, tileWidth, tileHeight) {
     this.tileWidth = tileWidth;
     this.tileHeight = tileHeight;
@@ -100,6 +117,7 @@ export default class VexTilemap extends VexBasic {
     this.heightInTiles = rows.length;
     this.data = [];
 
+    // Store rows in order so tile coordinates map directly to flat array indices.
     for (let r = 0; r < rows.length; r++) {
       const cols = rows[r]
         .split(",")

@@ -2,6 +2,12 @@ import VexBasic from "./VexBasic.js";
 import VexGlobal from "./VexGlobal.js";
 import VexAnimationController from "./animation/VexAnimationController.js";
 
+/**
+ * @file VexSprite.js
+ *
+ * Represents a movable, drawable game object. It combines motion and image
+ *  animation so common 2D behavior can be reused by game entities.
+ */
 export default class VexSprite extends VexBasic {
   constructor(x = 0, y = 0) {
     super();
@@ -29,8 +35,7 @@ export default class VexSprite extends VexBasic {
     this.image = null;
     this.animationController = new VexAnimationController(this);
 
-    // Simple whole-image color tint fallback if no spritesheet is loaded.
-    // TODO: create a VexGraphics class for this instead of using the sprite itself.
+    // A color fallback keeps sprites usable before an image is loaded.
     this.color = "#ffffff";
   }
 
@@ -52,10 +57,9 @@ export default class VexSprite extends VexBasic {
     return this;
   }
 
-  /**
-   * Applies drag-limited acceleration integration.
-   */
+  // Average old and new velocity to reduce position error during acceleration.
   _updateMotion(dt) {
+    // Keep horizontal motion independent so it can use its own drag and speed limit.
     const vx = this._computeVelocity(
       this.velocity.x,
       this.acceleration.x,
@@ -63,6 +67,7 @@ export default class VexSprite extends VexBasic {
       this.maxVelocity.x,
       dt,
     );
+    // Vertical motion has separate settings, allowing different movement behavior per axis.
     const vy = this._computeVelocity(
       this.velocity.y,
       this.acceleration.y,
@@ -75,6 +80,7 @@ export default class VexSprite extends VexBasic {
     this.velocity.x = vx;
     this.velocity.y = vy;
 
+    // Apply the same acceleration and drag rules to rotation as to linear motion.
     const va = this._computeVelocity(
       this.angularVelocity,
       this.anglularAcceleration,
@@ -86,6 +92,7 @@ export default class VexSprite extends VexBasic {
     this.angularVelocity = va;
   }
 
+  // Apply drag only without acceleration, then clamp velocity to avoid reversal or excess speed.
   _computeVelocity(velocity, acceleration, drag, max, dt) {
     if (acceleration !== 0) velocity += acceleration * dt;
     else if (drag !== 0) {
@@ -146,9 +153,7 @@ export default class VexSprite extends VexBasic {
     ctx.restore();
   }
 
-  /**
-   * Simple AABB overlap test.
-   */
+  // Axis-aligned bounds provide a fast collision check without shape calculations.
   overlaps(other) {
     return (
       this.x < other.x + other.width &&
@@ -158,6 +163,7 @@ export default class VexSprite extends VexBasic {
     );
   }
 
+  // The center is useful for targeting and other position-based calculations.
   getMidpoint() {
     return { x: this.x + this.width / 2, y: this.y + this.height / 2 };
   }

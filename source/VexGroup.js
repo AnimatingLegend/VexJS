@@ -1,12 +1,20 @@
 import VexBasic from "./VexBasic.js";
 
+/**
+ * @file VexGroup.js
+ *
+ * Holds game objects and forwards their lifecycle calls.
+ * Recycling members lets effects reuse objects instead of allocating new ones repeatedly.
+ */
 export default class VexGroup extends VexBasic {
   constructor(maxSize = 0) {
     super();
     this.members = [];
-    this.maxSize = maxSize; // 0 = unlimited
+    // Zero keeps capacity unrestricted when the group is not used as a pool.
+    this.maxSize = maxSize;
   }
 
+  // Prevent duplicate entries from receiving lifecycle calls more than once.
   add(object) {
     const existingIndex = this.members.indexOf(object);
     if (existingIndex !== -1) return object;
@@ -16,16 +24,15 @@ export default class VexGroup extends VexBasic {
     return object;
   }
 
+  // Return the reference so callers can keep using the removed object.
   remove(object) {
     const i = this.members.indexOf(object);
     if (i !== -1) this.members.splice(i, 1);
     return object;
   }
 
-  /**
-   * Reuses a dead member if one exists,
-   *  otherwise constructs a new one with factoryFn.
-   */
+  // Reuses a dead member if one exists.
+  // Otherwise, constructs a new one with factoryFn.
   recycle(factoryFn) {
     const dead = this.members.find((m) => !m.alive);
     if (dead) {
@@ -37,12 +44,14 @@ export default class VexGroup extends VexBasic {
     return created;
   }
 
+  // Ignore dead pool slots so callbacks only receive existing objects.
   forEach(fn) {
     this.members.forEach((m) => {
       if (m.exists) fn(m);
     });
   }
 
+  // Exclude dead members so pooled objects are treated as inactive.
   forEachAlive(fn) {
     this.members.forEach((m) => {
       if (m.exists && m.alive) fn(m);
@@ -61,6 +70,7 @@ export default class VexGroup extends VexBasic {
     });
   }
 
+  // Exclude dead pool entries so the count reflects active game objects.
   countLiving() {
     return this.members.filter((m) => m.exists && m.alive).length;
   }

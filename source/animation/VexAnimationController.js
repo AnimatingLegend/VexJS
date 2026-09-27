@@ -1,14 +1,14 @@
 /**
  * @file VexAnimationController.js
  *
- * Slices a spritesheet into frames and plays
- *  frame sequences at a given framerate.
+ * Plays named frame sequences from a spritesheet. Storing frame indices keeps
+ *  animations small and lets multiple sequences share the same image frames.
  */
 export default class VexAnimationController {
   constructor(sprite) {
     this.sprite = sprite;
-    this._frames = []; // { x, y, width, height } rects into the sheet.
-    this._animations = new Map(); // name -> { frames: [index,...], framerate, looped }
+    this._frames = [];
+    this._animations = new Map();
     this._current = null;
     this._frameIndex = 0;
     this._elapsed = 0;
@@ -16,11 +16,11 @@ export default class VexAnimationController {
     this.finished = false;
   }
 
+  // Precompute frame rectangles so playback only needs to select an index.
   _setupSheet(image, frameWidth, frameHeight) {
     this._frames = [];
     const cols = Math.floor(image.width / frameWidth);
     const rows = Math.floor(image.height / frameHeight);
-    // Slice the image into frames.
     for (let r = 0; r < rows; r++) {
       for (let c = 0; c < cols; c++) {
         this._frames.push({
@@ -34,6 +34,9 @@ export default class VexAnimationController {
   }
 
   /**
+   * Give the character a frame name, get its indices, set the framerate of the animation,
+   *  and determine whether the animation is looped.
+   *
    * Usage:
    * VexAnimationController.add("run", [0,1,2,3], 12, true)
    */
@@ -42,6 +45,8 @@ export default class VexAnimationController {
   }
 
   /**
+   * Play the characters animation.
+   *
    * Usage:
    * VexAnimationController.play("run", true)
    */
@@ -55,6 +60,7 @@ export default class VexAnimationController {
     this._applyFrame();
   }
 
+  // Resolve the animation index once so the renderer can use the current frame directly.
   _applyFrame() {
     const anim = this._animations.get(this._current);
     if (!anim) return;
@@ -69,6 +75,7 @@ export default class VexAnimationController {
 
     this._elapsed += dt;
     const frameDuration = 1 / anim.framerate;
+    // Consume all elapsed frame intervals so a delayed update does not lose animation time.
     while (this._elapsed >= frameDuration) {
       this._elapsed -= frameDuration;
       this._frameIndex++;

@@ -1,8 +1,8 @@
 /**
  * @file VexBasic.js
  *
- * The root class for anything that lives in the game world and needs
- *  `update()`/`destroy()` lifecycle hooks.
+ * Base class for objects managed by the game loop.
+ * Empty lifecycle hooks let subclasses implement only the behavior they need.
  */
 export default class VexBasic {
   constructor() {
@@ -13,17 +13,12 @@ export default class VexBasic {
     this.ID = -1;
   }
 
-  update(dt) {
-    // Override in subclasses.
-  }
+  // Empty hooks keep each lifecycle stage optional for subclasses.
+  update(dt) {}
 
-  draw(ctx, camera) {
-    // Override in subclasses.
-  }
+  draw(ctx, camera) {}
 
-  destroy() {
-    // Override in subclasses to release references.
-  }
+  destroy() {}
 
   kill() {
     this.alive = false;

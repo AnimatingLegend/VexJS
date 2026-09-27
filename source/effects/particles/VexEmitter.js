@@ -4,9 +4,8 @@ import VexSprite from "../../VexSprite.js";
 /**
  * @file VexEmitter.js
  *
- * Spawns short-lived particles with randomized velocity,
- *  using the same recycling groups already use so bursts don't allocate new
- *  sprites every time.
+ * Spawns short-lived particles and reuses them through VexGroup recycling to
+ *  avoid repeated allocations during bursts.
  */
 export default class VexEmitter extends VexGroup {
   constructor(x, y) {
@@ -15,15 +14,16 @@ export default class VexEmitter extends VexGroup {
     this.y = y;
   }
 
+  // Reuse pooled particles so repeated bursts do not allocate new sprites.
   emit() {
     const particle = this.recycle(() =>
       new VexSprite(this.x, this.y).makeGraphic(4, 4, "#ffaa00"),
     );
     particle.x = this.x;
     particle.y = this.y;
-    // Random left / right
+    // Spread particles horizontally so a burst does not stack in one column.
     particle.velocity.x = (Math.random() - 0.5) * 200;
-    // Upward burst
+    // Negative y moves upward in canvas coordinates.
     particle.velocity.y = -Math.random() * 200;
     particle.lifeSpan;
     particle.age = 0;

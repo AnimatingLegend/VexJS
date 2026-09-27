@@ -1,3 +1,4 @@
+// Keep easing curves reusable so tween timing can change without changing update logic.
 const Easing = {
   linear: (tmr) => tmr,
   quadIn: (tmr) => tmr * tmr,
@@ -10,9 +11,8 @@ const Easing = {
 /**
  * @file VexTween.js
  *
- * Animates numeric properties of an object over time with an easing function.
- * A lightweight manager tracks all active tweens;
- *  `VexGame.update()` drives it each frame.
+ * Animates object properties over time.
+ * A shared manager lets the game advance active tweens centrally on each update.
  */
 class VexTween {
   constructor(target, properties, duration, options = {}) {
@@ -47,15 +47,17 @@ class VexTween {
   }
 }
 
-// Static manager - Call VexTween.tween() from anywhere.
+// A shared list lets VexGame advance tweens without owning each one.
 const activeTweens = [];
 
+// Return the tween handle so callers can track its completion.
 function tween(target, properties, duration, options = {}) {
   const tmr = new VexTween(target, properties, duration, options);
   activeTweens.push(tmr);
   return tmr;
 }
 
+// Iterate backward so completed tweens can be removed without skipping entries.
 function updateTweens(dt) {
   for (let i = activeTweens.length - 1; i >= 0; i--) {
     activeTweens[i].update(dt);
@@ -63,6 +65,7 @@ function updateTweens(dt) {
   }
 }
 
+// Cancel updates when another action takes control of the same target.
 function cancelTweensOf(target) {
   for (let i = activeTweens.length - 1; i >= 0; i--) {
     if (activeTweens[i].target === target) activeTweens.splice(i, 1);

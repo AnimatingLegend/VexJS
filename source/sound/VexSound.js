@@ -1,9 +1,10 @@
 import VexTween from "../tweens/VexTween.js";
 
 /**
- * @file VexSound
+ * @file VexSound.js
  *
- * Universal sound object used for streaming, music, and sound effects.
+ * Wraps browser audio with playback controls and fades so music and effects
+ *  share one consistent interface.
  */
 export default class VexSound {
   constructor(path = null) {
@@ -26,18 +27,21 @@ export default class VexSound {
     this.audio.currentTime = 0;
   }
 
+  // Replace any active volume tween so only one fade controls the audio.
   fade(toVolume, duration = 1, onComplete = null) {
     if (!this.audio) return;
     VexTween.cancelTweensOf(this.audio);
     VexTween.tween(this.audio, { volume: toVolume }, duration, { onComplete });
   }
 
+  // Start silently to avoid an abrupt jump to the target volume.
   fadeIn(duration = 1, toVolume = 1) {
     this.volume = 0;
     this.play();
     this.fade(toVolume, duration);
   }
 
+  // Stop playback after fading so the audio does not continue silently.
   fadeOut(duration = 1, onComplete = null) {
     this.fade(0, duration, () => {
       this.stop();

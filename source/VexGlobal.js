@@ -3,10 +3,8 @@ import VexSound from "./sound/VexSound.js";
 /**
  * @file VexGlobal.js
  *
- * A global access point for input, screen size, the active camera, and cached assets.
- *
- * This is a singleton object, not a class, since on one should
- *  ever exist per game instance.
+ * Shared access to input, screen size, the active camera, and cached assets.
+ * One object keeps these resources available across engine modules.
  */
 const VexGlobal = {
   width: 0,
@@ -29,7 +27,7 @@ const VexGlobal = {
     justReleased(code) {
       return this._justReleased.has(code);
     },
-    // Called once per frame by `Game.js`, after `update()`, to clear one-frame flags.
+    // Clear one-frame flags after updates so input events last exactly one frame.
     _endFrame() {
       this._justPressed.clear();
       this._justReleased.clear();
@@ -70,10 +68,11 @@ const VexGlobal = {
     },
   },
 
-  // Sound Cache: keyed by URL so repeated `load()` calls reuse the same resource.
+  // Reuse audio resources for repeated requests of the same URL.
   music: null,
   _soundCache: new Map(),
 
+  // Share one loaded audio resource for repeated requests of the same path.
   loadSound(path) {
     if (this._soundCache.has(path)) return this._soundCache.get(path);
     const audio = new VexSound(path);
@@ -81,9 +80,9 @@ const VexGlobal = {
     return audio;
   },
 
+  // Give each playback its own audio node so effects can overlap.
   playSound(path, volume = 1) {
     const base = this.loadSound(path);
-    // Clone so overlapping plays of the same effect don't cut eachother off.
     const instance = new VexSound();
     instance.audio = base.audio.cloneNode();
     instance.volume = volume;
@@ -91,6 +90,7 @@ const VexGlobal = {
     return instance;
   },
 
+  // Keep background music exclusive so a new track replaces the current one.
   playMusic(path, volume = 1, loop = true) {
     if (this.music) this.music.stop();
     this.music = new VexSound(path);
@@ -100,15 +100,17 @@ const VexGlobal = {
     return this.music;
   },
 
+  // Support both immediate stops and smoother transitions between tracks.
   stopMusic(fadeOut = 0) {
     if (!this.music) return;
     if (fadeOut > 0) this.music.fadeOut(fadeOut);
     else this.music.stop();
   },
 
-  // Asset Cache: keyed by URL so repeated `load()` calls reuse the same resource.
+  // Reuse loaded images so repeated requests do not fetch them again.
   _imageCache: new Map(),
 
+  // Cache the in-flight promise so concurrent requests share one image load.
   async loadImage(path) {
     if (this._imageCache.has(path)) return this._imageCache.get(path);
     const img = new Image();
@@ -121,6 +123,7 @@ const VexGlobal = {
     return promise;
   },
 
+  // Release the current state's objects before the next state takes ownership.
   switchState(newState) {
     if (this.state) this.state.destroy();
     this.state = newState;

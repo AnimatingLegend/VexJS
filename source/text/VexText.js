@@ -3,9 +3,8 @@ import VexBasic from "../VexBasic.js";
 /**
  * @file VexText.js
  *
- * Renders a string using the canvas native text APIs.
- * Positioned and drawn the same way a sprite is, so it respects camera scroll and
- *  can be added to any VexGroup/VexState like anything else.
+ * Renders text with the canvas API and follows sprite positioning rules so
+ *  text can share the same camera and group behavior as other game objects.
  */
 export default class VexText extends VexBasic {
   constructor(x = 0, y = 0, text = "", options = {}) {
@@ -17,11 +16,10 @@ export default class VexText extends VexBasic {
     this.font = options.font || "16px sans-serif";
     this.bold = options.bold || false;
     this.color = options.color || "#ffffff";
-    this.align = options.align || "left"; // 'left' | 'center' | 'right'
+    this.align = options.align || "left";
     this.alpha = options.alpha ?? 1;
 
-    // 0 = Fixed on screen (HUD/UI Text).
-    // 1 = Moves fully with the world.
+    // Screen-space text is the default so HUD labels stay fixed as the camera moves.
     this.scrollFactor = {
       x: options.scrollFactor?.x ?? 0,
       y: options.scrollFactor?.y ?? 0,
@@ -40,9 +38,7 @@ export default class VexText extends VexBasic {
   draw(ctx, camera) {
     if (!this.visible) return;
 
-    // Same compensation Sprite uses: cancels out the canvas-level camera
-    // transform when scrollFactor isn't 1, so scrollFactor 0 text stays
-    // pinned to the screen instead of scrolling with the world.
+    // Compensate for the canvas transform so screen-space text stays fixed as the camera moves.
     const sx =
       this.x + camera.scroll.x * (1 - this.scrollFactor.x) - this.offset.x;
     const sy =

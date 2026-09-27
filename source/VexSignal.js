@@ -1,7 +1,7 @@
 /**
  * @file VexSignal.js
  *
- * A simple typed event dispatcher.
+ * A small event dispatcher for notifying registered listeners.
  */
 export default class VexSignal {
   constructor() {
@@ -31,7 +31,7 @@ export default class VexSignal {
   }
 
   dispatch(...args) {
-    // Copy the array in case a listener adds/removes during dispatch.
+    // A snapshot keeps listener changes from affecting the current dispatch.
     [...this.listeners].forEach((listener) => listener(...args));
   }
 }
