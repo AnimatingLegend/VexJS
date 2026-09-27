@@ -23,7 +23,7 @@ export default class VexSprite extends VexBasic {
 
     this.angle = 0;
     this.angularVelocity = 0;
-    this.anglularAcceleration = 0;
+    this.angularAcceleration = 0;
     this.angularDrag = 0;
     this.maxAngular = 10000;
 
@@ -37,6 +37,10 @@ export default class VexSprite extends VexBasic {
 
     // A color fallback keeps sprites usable before an image is loaded.
     this.color = "#ffffff";
+  }
+
+  get animation() {
+    return this.animationController;
   }
 
   async loadGraphic(path, frameWidth = 0, frameHeight = 0) {
@@ -83,7 +87,7 @@ export default class VexSprite extends VexBasic {
     // Apply the same acceleration and drag rules to rotation as to linear motion.
     const va = this._computeVelocity(
       this.angularVelocity,
-      this.anglularAcceleration,
+      this.angularAcceleration,
       this.angularDrag,
       this.maxAngular,
       dt,
@@ -124,14 +128,14 @@ export default class VexSprite extends VexBasic {
     ctx.scale(this.scale.x, this.scale.y);
 
     if (this.image) {
-      const frame = this.animation.currentFrame;
+      const frame = this.animationController.currentFrame;
       if (frame) {
         ctx.drawImage(
           this.image,
           frame.x,
           frame.y,
-          frame.w,
-          frame.h,
+          frame.width,
+          frame.height,
           -this.width / 2,
           -this.height / 2,
           this.width,

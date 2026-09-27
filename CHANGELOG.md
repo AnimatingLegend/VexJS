@@ -5,6 +5,22 @@ All notable changes to Vex.js are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- `VexSprite`: `animation` getter alias for `animationController`.
+
+### Fixed
+
+- `VexSprite`: `draw()` referenced `this.animation` instead of `this.animationController`.
+- `VexSprite`: `draw()` using `frame.w`/`frame.h` instead of `frame.width`/`frame.height`, throwing `DOMException` on spritesheet draws.
+- `VexSrpite`: `anglularAcceleration` typo -> `angularAcceleration`.
+- `VexCamera`: Removed duplicate `_flashAlpha` initialization in the constructor.
+  - Added the missing `_fadeAlpha` initialization.
+
+---
+
 ## [1.0.0] - [2026-09-25]
 
 ### Added

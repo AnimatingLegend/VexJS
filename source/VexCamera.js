@@ -19,7 +19,7 @@ export default class VexCamera {
     this._flashElapsed = 0;
     this._flashOnComplete = null;
 
-    this._flashAlpha = 0;
+    this._fadeAlpha = 0;
     this._fadeColor = "#000000";
     this._fadeDuration = 0;
     this._fadeElapsed = 0;
