@@ -56,7 +56,7 @@ export default class VexCamera  {
 
 > [!IMPORTANT]
 >
-> **DO NOT** create unsed comments, OR comment out unused sections of code. Keep those snippets anywhere else, or remove them.
+> **DO NOT** create unused comments, OR comment out unused sections of code. Keep those snippets anywhere else, or remove them.
 
 ## Imports
 
