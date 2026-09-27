@@ -9,13 +9,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- `Docs`: Added [`CONTRIBUTING.md`](./docs/CONTRIBUTING.md) for Issue / PR templates.
+- `Docs`: Added [`CODE_STYLE_GUIDE.md`](./docs/CODE_STYLE_GUIDE.md) for future contributors.
+- `Chore(deps-dev)`: Added project tooling and package metadata.
+  - Added `eslint` (`@eslint/js`, `globals`)
+  - Added `serve`
+  - Added `vitest`
 - `VexSprite`: `animation` getter alias for `animationController`.
+
+### Changed
+
+- Clarified code comments in the `source/` directory.
 
 ### Fixed
 
 - `VexSprite`: `draw()` referenced `this.animation` instead of `this.animationController`.
 - `VexSprite`: `draw()` using `frame.w`/`frame.h` instead of `frame.width`/`frame.height`, throwing `DOMException` on spritesheet draws.
-- `VexSrpite`: `anglularAcceleration` typo -> `angularAcceleration`.
+- `VexSprite`: `anglularAcceleration` typo -> `angularAcceleration`.
 - `VexCamera`: Removed duplicate `_flashAlpha` initialization in the constructor.
   - Added the missing `_fadeAlpha` initialization.
 
