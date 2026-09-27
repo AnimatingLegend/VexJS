@@ -51,8 +51,10 @@ const VexGlobal = {
 
     _onMove(e, canvas) {
       const rect = canvas.getBoundingClientRect();
-      this.x = e.clientX - rect.left;
-      this.y = e.clientY - rect.top;
+      const scaleX = canvas.width / rect.width;
+      const scaleY = canvas.height / rect.height;
+      this.x = (e.clientX - rect.left) * scaleX;
+      this.y = (e.clientY - rect.top) * scaleY;
     },
     _onDown() {
       this.pressed = true;
