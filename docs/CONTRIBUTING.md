@@ -9,7 +9,7 @@ Before you begin, make sure you have these things first.
 - **[Node.js](https://nodejs.org/en/download)**
   - This is the main environment that you use to run the engine. Make sure you get the **v24 (LTS)** release for better stability.
 - **[Project Dependencies](#included-dependencies)**
-  - These are the libraries the engine needs to work. like `electron` for the connection or `sqlite3` for database.
+  - These are the libraries needed for the engine to properly run. i.e. `electron` for the connection or `sqlite3` for database.
 
 ## Fork the Repository
 
@@ -42,7 +42,7 @@ npm install
 
 ## Create a new branch
 
-Your work shouldn't actively be done on the `main` branch, given that the branch is frequenetly worked on by other devs, and may cause merge conflicts with the changes you are making.
+Your work shouldn't actively be done on the `main` branch, given that the branch is frequently worked on by other devs, and may cause merge conflicts with the changes you are making.
 
 ### Example:
 
@@ -111,21 +111,21 @@ docs(contributing): added 2 new sections & update Issue/PR templates
 
 - `<type>`: Is **REQUIRED**
 - `<scope>`: Is required **ONLY** if you're working on an existing file.
-- `<subject>`: Is a short description of the change your commiting.
-- `<description>`: Adding a description to your commit message is optional, but prefered.
+- `<subject>`: Is a short description of the change you're committing.
+- `<description>`: Adding a description to your commit message is optional, but preferred.
 
-## Maintaing your Pull Request
+## Maintaining your Pull Request
 
 Keep your PR's clean and concise to make reviewing easier for the developers.
 
 ### Merge Conflicts
 
-Merge conflics are usually small modifications done to files that may overlap with pull requests or commits. This can easily be avoided by fixing them in your code editor, or on the GitHub page itself.
+Merge conflicts are usually small modifications done to files that may overlap with pull requests or commits. This can easily be avoided by fixing them in your code editor, or on the GitHub page itself.
 
 - If we require changes to your PR, we will label your PR `status: needs revision`.
 - Following the `status: needs revision` label, we will also leave a comment stating some of the changes you should make.
 - If you receive a comment, you have 30 - 60 days to implement the requested changes.
-- If you dont submit the changes on time, your PR will be closed for inactivity, and labeled as `status: state`.
+- If you don't submit the changes on time, your PR will be closed for inactivity, and labeled as `status: state`.
 
 ### Rebasing
 
