@@ -39,7 +39,10 @@ export default class VexTilemap extends VexBasic {
     // Clamp visible columns to the map boundary to avoid out-of-range tile reads.
     const endCol = Math.min(
       this.widthInTiles,
-      Math.ceil((camera.scroll.x + camera.width - this.x) / this.tileWidth),
+      Math.ceil(
+        (camera.scroll.x + camera.width / camera.zoom - this.x) /
+          this.tileWidth,
+      ),
     );
 
     // Skip off-screen rows so large maps do not require full-map drawing.
@@ -51,7 +54,10 @@ export default class VexTilemap extends VexBasic {
     // Clamp visible rows to the map boundary to avoid out-of-range tile reads.
     const endRow = Math.min(
       this.heightInTiles,
-      Math.ceil((camera.scroll.y + camera.height - this.y) / this.tileHeight),
+      Math.ceil(
+        (camera.scroll.y + camera.height / camera.zoom - this.y) /
+          this.tileHeight,
+      ),
     );
 
     // The atlas width sets how many tile graphics fit in each source row.
