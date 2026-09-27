@@ -71,7 +71,7 @@ export default class VexCamera {
     }
 
     if (this._flashElapsed < this._flashDuration) {
-      this._flashElapsed = dt;
+      this._flashElapsed += dt;
       this._flashAlpha = Math.max(
         0,
         1 - this._flashElapsed / this._flashDuration,
