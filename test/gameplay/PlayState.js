@@ -24,14 +24,14 @@ export default class PlayState extends VexState {
 
     this.gravity = 500;
 
-    VexGlobal.camera.follow(this.player /*, { mode: 'lerp', lerp: 0.05 }*/);
+    // Follow the player when moving with your arrow keys.
+    VexGlobal.camera.follow(this.player, { mode: "lerp", lerp: 0.05 });
     // Little intro fade-in.
     VexGlobal.camera.fade("#000000", 0.5, true);
   }
 
   update(dt) {
     super.update(dt);
-    //VexGlobal.state.update(dt);
     VexGlobal.camera.update(dt);
 
     const player = this.player;
