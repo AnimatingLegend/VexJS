@@ -51,7 +51,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - VexSprite
   - VexState
 - `Loop`: Fixed-timestep game loop.
-- `Sprite`: Drag-limited acceleraction integration for motion.
+- `Sprite`: Drag-limited acceleration integration for motion.
 
 ```js
 sprite.acceleration.x = 800;
@@ -121,11 +121,11 @@ VexGlobal.stopMusic(2); // Smoothly fades out over 2 seconds.
 
 ### Changed
 
-- `CI`: Removed npm test from the workflow, (no test suite exists yet; it was running the dev server & hanging.)
+- `CI`: Removed `npm test` from the workflow, (no test suite exists yet; it was running the dev server & hanging.)
 
 ### Fixed
 
-- `PlayState(temp)`: Score incrementing on any click instead of only clicks inside the targets sprite's bounds.
+- `PlayState(temp)`: Score incrementing on any click instead of only clicks inside the target's sprite's bounds.
 - `Camera`: Vertical centering using sprite width instead of height.
 - `Sprite`: Draw position double-applying `camera.scroll`, causing drift instead of a locked view.
 - `Loop`: Fixed timestep accumulator incrementing instead of decrementing, freezing the game.
