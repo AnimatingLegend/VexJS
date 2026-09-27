@@ -81,7 +81,10 @@ export default class VexClass {
 export { default as VexClass } from "./source/VexClass.js";
 ```
 
-When done writing your code, run `npm run dev` to start the dev server and test your changes.
+When done writing your code, run the following commands:
+
+- `npm run lint`: Check's your code issues and project rules.
+- `npm run dev`: Start's a local dev server to try your changes.
 
 ## Commit your changes
 
