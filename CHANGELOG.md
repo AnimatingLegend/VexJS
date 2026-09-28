@@ -5,12 +5,12 @@ All notable changes to Vex.js are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.0.1] - [2026-09-28]
 
 ### Added
 
 - `Docs`: Added [`CONTRIBUTING.md`](./docs/CONTRIBUTING.md) for Issue / PR templates.
-- `Docs`: Added [`CODE_STYLE_GUIDE.md`](./docs/CODE_STYLE_GUIDE.md) for future contributors.
+- `Docs`: Added [`CODE_STYLE_GUIDE.md`](./docs/CODE_STYLE_GUIDE.md) for contributors.
 - `Chore(deps-dev)`: Added project tooling and package metadata.
   - Added `eslint` (`@eslint/js`, `globals`)
   - Added `serve`
@@ -19,15 +19,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Added smooth camera lerping to [gameplay demo](./test/gameplay/PlayState.js).
 - Clarified code comments in the `source/` directory.
 
 ### Fixed
 
+- `CI`: Resolved `YAML` formatting for bug reports.
+- `Docs`: Fix a plethora of grammar mistakes in the contribution guide. ([ec5ad92](https://github.com/AnimatingLegend/VexJS/commit/ec5ad929912d1faa0326b4fe16f2eccd170af33d)) - by @F4LDR
 - `VexSprite`: `draw()` referenced `this.animation` instead of `this.animationController`.
-- `VexSprite`: `draw()` using `frame.w`/`frame.h` instead of `frame.width`/`frame.height`, throwing `DOMException` on spritesheet draws.
+- `VexSprite`: `draw()` using `frame.w`/`frame.h` instead of `frame.width`/`frame.height`, throwing `DOMException` errors on spritesheet draws.
 - `VexSprite`: `anglularAcceleration` typo -> `angularAcceleration`.
 - `VexCamera`: Removed duplicate `_flashAlpha` initialization in the constructor.
   - Added the missing `_fadeAlpha` initialization.
+- `VexCamera`: Fixed `camera.flash()` timer from resetting every frame, instead of accumulating.
+- `VexGlobal`: Mouse coordinates not scaled for CSS-resized canvas's.
+- `VexTilemap`: Zoom culling: `endCol` & `endRow` not dividing by `camera.zoom`.
+
+## New Contributors for 1.0.1
+
+- @F4LDR made their first contribution in [ec5ad92](https://github.com/AnimatingLegend/VexJS/commit/ec5ad929912d1faa0326b4fe16f2eccd170af33d)
 
 ---
 
