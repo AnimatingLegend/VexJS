@@ -1,23 +1,28 @@
 name: Bug Report
-description: Report a bug that occurred while playing the game.
+description: Report a bug that occurred while playing a game, or testing the engine.
 labels: ["type: bug", "status: pending review"]
 title: "Bug Report: "
 body:
   - type: markdown
     attributes:
       value: "## Please follow the guidelines listed below before making your Issue."
+
   - type: checkboxes
+    id: checklist
     attributes:
       label: Issue Checklist
       options:
         - label: I have read the [Contributing Guide](https://github.com/AnimatingLegend/VexJS/blob/docs/vex-guidelines/docs/CONTRIBUTING.md)
         - label: I have properly titled my issue
+    validations:
+      required: true
 
   - type: input
+    id: version
     attributes:
       label: Version
       description: Which version are you running?
-      placeholder: ex. 1.0.0 or 1.1.0-develop
+      placeholder: "ex. 1.0.0 or 1.1.0-develop"
     validations:
       required: true
 
@@ -26,17 +31,19 @@ body:
       value: "## Describe your bug."
 
   - type: textarea
+    id: description
     attributes:
       label: "Description (include any images, code snippets, errors, etc.)"
       description: Provide a detailed description of your bug.
-      placeholder: Describe your bug here...
+      placeholder: "Describe your bug here..."
     validations:
       required: true
 
   - type: textarea
+    id: steps
     attributes:
       label: "Steps to Reproduce"
       description: Is there a method to reliably reproduce it?
-      placeholder: 1.
+      placeholder: "1. Go to..."
     validations:
       required: false
