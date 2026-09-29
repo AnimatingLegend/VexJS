@@ -12,6 +12,8 @@ export default class VexEmitter extends VexGroup {
     super();
     this.x = x;
     this.y = y;
+
+    this.lifeSpan = 0.6;
   }
 
   // Reuse pooled particles so repeated bursts do not allocate new sprites.
@@ -25,13 +27,14 @@ export default class VexEmitter extends VexGroup {
     particle.velocity.x = (Math.random() - 0.5) * 200;
     // Negative y moves upward in canvas coordinates.
     particle.velocity.y = -Math.random() * 200;
-    particle.lifeSpan;
+    particle.lifeSpan = this.lifeSpan;
     particle.age = 0;
   }
 
   update(dt) {
     super.update(dt);
     this.forEachAlive((particle) => {
+      particle.age += dt;
       if (particle.age >= particle.lifeSpan) particle.kill();
     });
   }
