@@ -59,6 +59,7 @@ export default class PlayState extends VexState {
       this.particles.y = VexGlobal.mouse.y;
       for (let i = 0; i < 8; i++) {
         this.particles.emit();
+        this.particles.fadeParticle(0, 2, () => console.log("complete"));
       }
 
       this.score += 20;

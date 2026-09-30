@@ -1,5 +1,6 @@
 import VexGroup from "../../VexGroup.js";
 import VexSprite from "../../VexSprite.js";
+import VexTween from "../../tweens/VexTween.js";
 
 /**
  * @file VexEmitter.js
@@ -13,7 +14,9 @@ export default class VexEmitter extends VexGroup {
     this.x = x;
     this.y = y;
 
-    this.lifeSpan = 0.6;
+    this.particle;
+    this.particleFade;
+    this.particleLifeSpan = 0.6;
   }
 
   // Reuse pooled particles so repeated bursts do not allocate new sprites.
@@ -21,14 +24,34 @@ export default class VexEmitter extends VexGroup {
     const particle = this.recycle(() =>
       new VexSprite(this.x, this.y).makeGraphic(4, 4, "#ffaa00"),
     );
+    this.particle = particle;
     particle.x = this.x;
     particle.y = this.y;
+    particle.lifeSpan = this.particleLifeSpan;
+    particle.age = 0;
+    particle.alpha = 1;
     // Spread particles horizontally so a burst does not stack in one column.
     particle.velocity.x = (Math.random() - 0.5) * 200;
     // Negative y moves upward in canvas coordinates.
     particle.velocity.y = -Math.random() * 200;
-    particle.lifeSpan = this.lifeSpan;
-    particle.age = 0;
+    this.particleFade = this.fadeParticle();
+  }
+
+  // Fade the current particle, replacing any existing alpha tween.
+  fadeParticle(particleAlpha = 1, particleDuration = 1, onComplete = null) {
+    VexTween.cancelTweensOf(this.particle);
+    VexTween.tween(
+      this.particle,
+      {
+        alpha: particleAlpha,
+        duration: particleDuration,
+      },
+      this.particleLifeSpan,
+      {
+        ease: VexTween.Easing.quadOut,
+        onComplete,
+      },
+    );
   }
 
   update(dt) {
