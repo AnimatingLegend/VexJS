@@ -5,6 +5,34 @@ All notable changes to Vex.js are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.2] - [2026-09-30]
+
+Minor additions and tweaks to [`VexEmitter.js`](/source/effects/particles/VexEmitter.js)!
+
+### Added
+
+- `VexEmitter`: Particles now fade in, and out, via alpha tween over their lifespan instead of disappearing instantly.
+
+```js
+// Fade-out
+this.particle.fadeParticle(0, 1.5, () => {
+  console.log("particle fade-out complete!");
+});
+
+// Fade-in
+this.particle.alpha = 0;
+this.particle.fadeParticle(1, 1.5 () => {
+  console.log("particle fade-in complete!");
+});
+```
+
+### Fixed
+
+- `VexEmitter`: `particle.lifeSpan` now properly assigns the emitter's lifespan to each particle that's currently active.
+- `VexEmitter`: `particle.age` now age each frame, and are killed once they reach their lifespan.
+
+---
+
 ## [1.0.1] - [2026-09-28]
 
 ### Added
