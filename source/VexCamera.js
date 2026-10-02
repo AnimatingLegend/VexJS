@@ -62,8 +62,9 @@ export default class VexCamera {
         this.target.y + this.target.height / 2 - this.height / (2 * this.zoom);
 
       if (this.followMode === "lerp") {
-        this.scroll.x += (targetX - this.scroll.x) * this.followLerp;
-        this.scroll.y += (targetY - this.scroll.y) * this.followLerp;
+        const alpha = 1 - Math.pow(1 - this.followLerp, dt * 60);
+        this.scroll.x += (targetX - this.scroll.x) * alpha;
+        this.scroll.y += (targetY - this.scroll.y) * alpha;
       } else {
         this.scroll.x = targetX;
         this.scroll.y = targetY;
