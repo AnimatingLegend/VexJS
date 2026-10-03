@@ -34,14 +34,13 @@ export default class VexGroup extends VexBasic {
   // Reuses a dead member if one exists.
   // Otherwise, constructs a new one with factoryFn.
   recycle(factoryFn) {
-    const dead = this.members.find((m) => !m.alive);
-    if (dead) {
-      dead.revive();
-      return dead;
+    let member = this.members.find((m) => !m.exists);
+    if (!member) {
+      if (this.maxSize > 0 && this.members.length >= this.maxSize) return null;
+      member = factoryFn();
+      this.members.push(member);
     }
-    const created = factoryFn();
-    this.add(created);
-    return created;
+    return member;
   }
 
   // Ignore dead pool slots so callbacks only receive existing objects.
