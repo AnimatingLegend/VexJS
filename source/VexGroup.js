@@ -50,6 +50,23 @@ export default class VexGroup extends VexBasic {
     });
   }
 
+  // Return the first living member or null if none exist.
+  getFirstAlive() {
+    console.log(this.members);
+    return this.members.find((m) => m.exists && m.alive) || null;
+  }
+
+  // Return the first dead member or null if none exist.
+  getFirstDead() {
+    console.log(this.members);
+    return this.members.find((m) => !m.exists) || null;
+  }
+
+  // Exclude dead members so pooled objects are treated as inactive.
+  countDead() {
+    return this.members.filter((m) => !m.exists).length;
+  }
+
   // Exclude dead members so pooled objects are treated as inactive.
   forEachAlive(fn) {
     this.members.forEach((m) => {
