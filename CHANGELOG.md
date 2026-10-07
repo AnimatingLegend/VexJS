@@ -5,6 +5,24 @@ All notable changes to Vex.js are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.3] - [2026-10-07]
+
+### Added
+
+- `VexGroup`: Added the following group members:
+  - `getFirstAlive()` - Returns the first active, living member.
+  - `getFirstDead` - Returns the first inactive member in the pool.
+  - `countDead` - Returns the number of dead pool members.
+
+### Fixed
+
+- `VexState`: `destroy()` now destroys active subState's instead of leaking into a new state.
+- `VexGroup`: `recycle()` now guards pool capacity before calling
+- `VexCamera`: Replaced direct `followLerp` multiplication with exponential decay, fixing framerate-dependent camera chase speed.
+- [`test/gameplay/playstate`](./test/gameplay/PlayState.js): Fixed side-collision teleport but falling from a platform.
+
+---
+
 ## [1.0.2] - [2026-09-30]
 
 Minor additions and tweaks to [`VexEmitter.js`](/source/effects/particles/VexEmitter.js)!
