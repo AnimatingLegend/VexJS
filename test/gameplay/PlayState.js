@@ -77,8 +77,15 @@ export default class PlayState extends VexState {
   _resolvePlatformCollision() {
     this.platforms.forEachAlive((platform) => {
       if (!this.player.overlaps(platform)) return;
-      // Simple top-of-platform collision resolution
-      if (this.player.velocity.y >= 0) {
+
+      // Calculate how deep the player is embedded in the platform.
+      const depth = this.player.y + this.player.height - platform.y;
+      // Allow snapped ONLY within a small entry window.
+      const maxDepth = 12;
+      const isLanding = depth > 0 && depth <= maxDepth;
+
+      if (this.player.velocity.y >= 0 && isLanding) {
+        // snap the player to the top of the platform and reset downard velocity.
         this.player.y = platform.y - this.player.height;
         this.player.velocity.y = 0;
       }
