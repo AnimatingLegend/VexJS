@@ -17,9 +17,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - `VexState`: `destroy()` now destroys active subState's instead of leaking into a new state.
-- `VexGroup`: `recycle()` now guards pool capacity before calling
-- `VexCamera`: Replaced direct `followLerp` multiplication with exponential decay, fixing framerate-dependent camera chase speed.
-- [`test/gameplay/playstate`](./test/gameplay/PlayState.js): Fixed side-collision teleport but falling from a platform.
+- `VexGroup`: `recycle()` now guards pool capacity before calling.
+- `VexCamera`: Replaced direct `followLerp` multiplication with exponential decay, fixing framerate-dependent camera speed.
+- [`test/gameplay/PlayState.js`](./test/gameplay/PlayState.js): Fixed side-collision teleport but falling from a platform.
 
 ---
 
