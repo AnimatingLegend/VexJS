@@ -53,6 +53,10 @@ export default class VexState extends VexBasic {
   }
 
   destroy() {
+    if (this.subState) {
+      this.subState.destroy();
+      this.subState = null;
+    }
     this._group.destroy();
   }
 }
