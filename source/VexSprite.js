@@ -28,6 +28,8 @@ export default class VexSprite extends VexBasic {
     this.maxAngular = 10000;
 
     this.scale = { x: 1, y: 1 };
+    this.flipX = false;
+    this.flipY = false;
     this.alpha = 1;
     this.scrollFactor = { x: 1, y: 1 };
     this.offset = { x: 0, y: 0 };
@@ -59,6 +61,18 @@ export default class VexSprite extends VexBasic {
     this.color = color;
     this.image = null;
     return this;
+  }
+
+  setPosition(x, y) {
+    this.x = x;
+    this.y = y;
+    return this; // Allow for method chaining
+  }
+
+  setSize(width, height) {
+    this.width = width;
+    this.height = height;
+    return this; // Allow for method chaining
   }
 
   // Average old and new velocity to reduce position error during acceleration.
@@ -125,7 +139,10 @@ export default class VexSprite extends VexBasic {
     ctx.globalAlpha = this.alpha;
     ctx.translate(sx + this.width / 2, sy + this.height / 2);
     ctx.rotate((this.angle * Math.PI) / 180);
-    ctx.scale(this.scale.x, this.scale.y);
+    ctx.scale(
+      this.scale.x * (this.flipX ? -1 : 1),
+      this.scale.y * (this.flipY ? -1 : 1),
+    );
 
     if (this.image) {
       const frame = this.animationController.currentFrame;
