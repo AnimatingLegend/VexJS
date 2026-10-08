@@ -35,7 +35,10 @@ export default class VexGroup extends VexBasic {
   // Otherwise, constructs a new one with factoryFn.
   recycle(factoryFn) {
     let member = this.members.find((m) => !m.exists);
-    if (!member) {
+    if (member) {
+      member.revive();
+      return member;
+    } else {
       if (this.maxSize > 0 && this.members.length >= this.maxSize) return null;
       member = factoryFn();
       this.members.push(member);
