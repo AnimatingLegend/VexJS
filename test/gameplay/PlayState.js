@@ -9,7 +9,9 @@ import { VexState, VexSprite, VexGroup, VexGlobal } from "../../index.js";
  */
 export default class PlayState extends VexState {
   create() {
-    this.player = new VexSprite(100, 100).makeGraphic(32, 32, "#ffffff");
+    this.player = new VexSprite()
+      .makeGraphic(32, 32, "#ffffff")
+      .setPosition(0, 350);
     this.playerSpawn = { x: this.player.x, y: this.player.y }; // Remember where the character started.
     this.player.drag.x = 800;
     this.player.maxVelocity.x = 200;
