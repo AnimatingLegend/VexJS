@@ -1,7 +1,6 @@
 /**
  * @file VexSignal.js
- *
- * A small event dispatcher for notifying registered listeners.
+ * @description A small event dispatcher for notifying registered listeners.
  */
 export default class VexSignal {
   constructor() {
@@ -33,5 +32,10 @@ export default class VexSignal {
   dispatch(...args) {
     // A snapshot keeps listener changes from affecting the current dispatch.
     [...this.listeners].forEach((listener) => listener(...args));
+  }
+
+  // returns a boolean indicating if there are any listeners registered.
+  get hasItems() {
+    return this.listeners.length > 0;
   }
 }
