@@ -1,5 +1,4 @@
 import VexBasic from "./VexBasic.js";
-import VexGlobal from "./VexGlobal.js";
 import VexAnimationController from "./animation/VexAnimationController.js";
 
 /**
@@ -45,13 +44,24 @@ export default class VexSprite extends VexBasic {
     return this.animationController;
   }
 
-  async loadGraphic(path, frameWidth = 0, frameHeight = 0) {
-    this.image = await VexGlobal.loadImage(path);
-    this.width = frameWidth || this.image.width;
-    this.height = frameHeight || this.image.height;
-    if (frameWidth && frameHeight) {
-      this.animationController._setupSheet(this.image, frameWidth, frameHeight);
-    }
+  loadGraphic(path, frameWidth = 0, frameHeight = 0) {
+    const image = new Image();
+    image.src = path;
+    this.image = image;
+    this.width = frameWidth;
+    this.height = frameHeight;
+
+    image.onload = () => {
+      this.width = frameWidth || this.width || image.width;
+      this.height = frameHeight || this.height || image.height;
+      if (frameWidth && frameHeight) {
+        this.animationController._setupSheet(
+          this.image,
+          frameWidth,
+          frameHeight,
+        );
+      }
+    };
     return this;
   }
 
@@ -144,7 +154,7 @@ export default class VexSprite extends VexBasic {
       this.scale.y * (this.flipY ? -1 : 1),
     );
 
-    if (this.image) {
+    if (this.image && this.image.complete) {
       const frame = this.animationController.currentFrame;
       if (frame) {
         ctx.drawImage(
