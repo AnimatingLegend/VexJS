@@ -3,7 +3,7 @@ import VexBasic from "../VexBasic.js";
 /**
  * @file VexText.js
  *
- * Renders text with the canvas API and follows sprite positioning rules so
+ * @description Renders text with the canvas API and follows sprite positioning rules so
  *  text can share the same camera and group behavior as other game objects.
  */
 export default class VexText extends VexBasic {
@@ -30,8 +30,39 @@ export default class VexText extends VexBasic {
     };
   }
 
+  // Sets the text content of the label.
   setText(text) {
     this.text = text;
+    return this;
+  }
+
+  // Sets the font of the label.
+  setFont(font) {
+    this.font = font;
+    return this;
+  }
+
+  // Sets the boldness of the label.
+  setBold(bold) {
+    this.bold = bold;
+    return this;
+  }
+
+  // Sets the alpha of the label.
+  setAlpha(alpha) {
+    this.alpha = alpha;
+    return this;
+  }
+
+  // Sets the alignment of the label.
+  setAlign(align) {
+    this.align = align;
+    return this;
+  }
+
+  // Sets the color of the label.
+  setColor(hex) {
+    this.color = hex;
     return this;
   }
 
