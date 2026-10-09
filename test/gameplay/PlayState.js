@@ -1,51 +1,96 @@
-import { VexState, VexSprite, VexGroup, VexGlobal } from "../../index.js";
+import {
+  VexGlobal,
+  VexGroup,
+  VexState,
+  VexSprite,
+  VexText,
+} from "../../index.js";
 
 /**
  * @file PlayState.js
  *
- * A minimal "hello world" for Vex:
- * A player you move with arrow keys, gravity, a platform to land on,
- *  and a camera that follows you.
+ * @description A minimal "hello world" for Vex.
+ * @description A player you move with arrow keys, gravity, a platform to land on, and a camera that follows you.
  */
 export default class PlayState extends VexState {
   create() {
+    // Initialize the player sprite.
     this.player = new VexSprite()
       .makeGraphic(32, 32, "#ffffff")
-      .setPosition(0, 350);
-    this.playerSpawn = { x: this.player.x, y: this.player.y }; // Remember where the character started.
+      .setPosition(0, 450);
+    // How much the player is slowed down when not moving.
     this.player.drag.x = 800;
+    // How fast the player can move horizontally.
     this.player.maxVelocity.x = 200;
+    // Remember where the character initially started.
+    this.playerSpawn = { x: this.player.x, y: this.player.y };
     this.add(this.player);
 
-    this.platforms = new VexGroup();
-    const ground = new VexSprite(0, 400).makeGraphic(640, 40, "#446644");
-    this.platforms.add(ground);
-    const ledge = new VexSprite(300, 300).makeGraphic(150, 20, "#446644");
-    this.platforms.add(ledge);
-    this.add(this.platforms);
-
-    this.gravity = 500;
-
-    // Follow the player when moving with your arrow keys.
-    VexGlobal.camera.follow(this.player, { mode: "lerp", lerp: 0.05 });
-    // Little intro fade-in.
+    // Add a little camera fade-in effect when spawning.
     VexGlobal.camera.fade("#000000", 0.5, true);
+    // Follow the player when moving.
+    VexGlobal.camera.follow(this.player, { mode: "lerp", lerp: 0.05 });
+
+    // Initialize the game level.
+    this._buildLevel();
+    this.levelGravity = 500;
+
+    // Initalize the games HUD.
+    this._buildHUD();
+  }
+
+  _buildLevel() {
+    this.platformGrp = new VexGroup();
+    var ground = new VexSprite(0, 500).makeGraphic(650, 50, "#446644");
+    this.platformGrp.add(ground);
+    var ledge = new VexSprite(300, 400).makeGraphic(180, 20, "#446644");
+    this.platformGrp.add(ledge);
+    this.add(this.platformGrp);
+  }
+
+  _buildHUD() {
+    this.hud = new VexGroup();
+    var descText = new VexText();
+    descText.setText(
+      "Use Arrow/WASD keys to move, Shift to sprint, & Space to jump.",
+    );
+    descText.setColor("#ffffff");
+    descText.setFont("18px Comic Sans MS");
+    descText.setColor("#ffffff");
+    descText.setAlign("left");
+    descText.x = 40;
+    descText.y = 20;
+    this.hud.add(descText);
+    this.add(this.hud);
   }
 
   update(dt) {
     super.update(dt);
     VexGlobal.camera.update(dt);
 
-    const player = this.player;
+    var player = this.player;
     player.acceleration.x = 0;
+    player.acceleration.y = this.levelGravity;
 
-    if (VexGlobal.keys.pressed("ArrowLeft")) player.acceleration.x = -800;
-    if (VexGlobal.keys.pressed("ArrowRight")) player.acceleration.x = 800;
+    var isRunning =
+      VexGlobal.keys.pressed("ShiftLeft") ||
+      VexGlobal.keys.pressed("ShiftRight");
+    var speed = isRunning ? 1000 : 800;
+    // Boost both top speed, AND acceleration when running.
+    player.maxVelocity.x = isRunning ? 300 : 100;
 
-    player.acceleration.y = this.gravity;
+    if (VexGlobal.keys.pressed("ArrowLeft") || VexGlobal.keys.pressed("KeyA"))
+      player.acceleration.x = -speed;
+    if (VexGlobal.keys.pressed("ArrowRight") || VexGlobal.keys.pressed("KeyD"))
+      player.acceleration.x = speed;
 
-    if (VexGlobal.keys.pressed("Space") && this._onGround())
-      player.velocity.y = -320;
+    if (
+      VexGlobal.keys.pressed("ArrowUp") ||
+      VexGlobal.keys.pressed("KeyW") ||
+      VexGlobal.keys.pressed("Space")
+    ) {
+      if (this._isGrounded()) player.velocity.y = -320;
+    }
 
     // If the players gravity exceeds 1000, respawn the player back to its original place.
     if (player.y > 1000) {
@@ -53,31 +98,11 @@ export default class PlayState extends VexState {
       this._respawnCharacter();
     }
 
-    this._resolvePlatformCollision();
+    this._platformCollision();
   }
 
-  _onGround() {
-    let grounded = false;
-    this.platforms.forEachAlive((platform) => {
-      if (
-        this.player.overlaps(platform) &&
-        this.player.y + this.player.height <= platform.y + 10
-      ) {
-        grounded = true;
-      }
-    });
-    return grounded;
-  }
-
-  _respawnCharacter() {
-    this.player.x = this.playerSpawn.x;
-    this.player.y = this.playerSpawn.y;
-    this.player.velocity.x = 0;
-    this.player.velocity.y = 0;
-  }
-
-  _resolvePlatformCollision() {
-    this.platforms.forEachAlive((platform) => {
+  _platformCollision() {
+    this.platformGrp.forEachAlive((platform) => {
       if (!this.player.overlaps(platform)) return;
 
       // Calculate how deep the player is embedded in the platform.
@@ -92,5 +117,26 @@ export default class PlayState extends VexState {
         this.player.velocity.y = 0;
       }
     });
+  }
+
+  _isGrounded() {
+    var isGrounded = false;
+    this.platformGrp.forEachAlive((platformGrp) => {
+      // Check if the player is colliding with the platform from above.
+      if (
+        this.player.overlaps(platformGrp) &&
+        this.player.y + this.player.height <= platformGrp.y + 10
+      ) {
+        isGrounded = true;
+      }
+    });
+    return isGrounded;
+  }
+
+  _respawnCharacter() {
+    this.player.x = this.playerSpawn.x;
+    this.player.y = this.playerSpawn.y;
+    this.player.velocity.x = 0;
+    this.player.velocity.y = 0;
   }
 }
