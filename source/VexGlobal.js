@@ -85,8 +85,7 @@ const VexGlobal = {
   // Give each playback its own audio node so effects can overlap.
   playSound(path, volume = 1) {
     const base = this.loadSound(path);
-    const instance = new VexSound();
-    instance.audio = base.audio.cloneNode();
+    const instance = new VexSound(base.audio.cloneNode());
     instance.volume = volume;
     instance.play();
     return instance;

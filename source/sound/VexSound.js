@@ -7,8 +7,12 @@ import VexTween from "../tweens/VexTween.js";
  *  share one consistent interface.
  */
 export default class VexSound {
-  constructor(path = null) {
-    this.audio = path ? new Audio(path) : null;
+  constructor(source = null) {
+    if (typeof source === "string") {
+      this.audio = new Audio(source);
+    } else {
+      this.audio = source; // Already an audio element or null
+    }
   }
 
   play(forceReset = false) {
