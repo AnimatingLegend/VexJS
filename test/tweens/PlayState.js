@@ -3,6 +3,7 @@ import {
   VexState,
   VexSprite,
   VexText,
+  VexEase,
   VexTween,
 } from "../../index.js";
 
@@ -68,24 +69,24 @@ export default class PlayState extends VexState {
   _startTween() {
     this.boxSineIn.y = 50;
     VexTween.tween(this.boxSineIn, { y: 380 }, 2, {
-      ease: VexTween.Easing.sineIn,
+      ease: VexEase.sineIn,
       onComplete: () => console.log("SineIn Tween Complete"),
     });
 
     this.boxSineOut.y = 50;
     VexTween.tween(this.boxSineOut, { y: 380 }, 2, {
-      ease: VexTween.Easing.sineOut,
+      ease: VexEase.sineOut,
       onComplete: () => console.log("SineOut Tween Complete"),
     });
 
     this.boxSineInOut.y = 50;
     VexTween.tween(this.boxSineInOut, { y: 380 }, 2, {
-      ease: VexTween.Easing.sineInOut,
+      ease: VexEase.sineInOut,
     });
 
     this.boxBounceOut.y = 50;
     VexTween.tween(this.boxBounceOut, { y: 380 }, 2, {
-      ease: VexTween.Easing.bounceOut,
+      ease: VexEase.bounceOut,
       onComplete: () => console.log("BounceOut Tween Complete"),
     });
   }

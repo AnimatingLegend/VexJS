@@ -3,6 +3,7 @@ export { default as VexEmitter } from "./source/effects/particles/VexEmitter.js"
 export { default as VexTilemap } from "./source/graphics/tile/VexTilemap.js";
 export { default as VexSound } from "./source/sound/VexSound.js";
 export { default as VexText } from "./source/text/VexText.js";
+export { default as VexEase } from "./source/tweens/VexEase.js";
 export { default as VexTween } from "./source/tweens/VexTween.js";
 export { default as VexBasic } from "./source/VexBasic.js";
 export { default as VexCamera } from "./source/VexCamera.js";
