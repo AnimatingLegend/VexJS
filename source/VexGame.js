@@ -13,12 +13,20 @@ export default class VexGame {
     width = 640,
     height = 480,
     canvas = null,
+    container = null,
     initialState,
     framerate = 60,
   } = {}) {
     this.canvas = canvas || document.createElement("canvas");
     this.canvas.width = width;
     this.canvas.height = height;
+    if (!canvas && container) {
+      const parent =
+        typeof container === "string"
+          ? document.querySelector(container)
+          : container;
+      if (parent) parent.appendChild(this.canvas);
+    }
     this.ctx = this.canvas.getContext("2d");
 
     VexGlobal.width = width;
