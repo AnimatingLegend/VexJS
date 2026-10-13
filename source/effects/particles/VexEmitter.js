@@ -1,6 +1,7 @@
+import VexEase from "../../tweens/VexEase.js";
+import VexTween from "../../tweens/VexTween.js";
 import VexGroup from "../../VexGroup.js";
 import VexSprite from "../../VexSprite.js";
-import VexTween from "../../tweens/VexTween.js";
 
 /**
  * @file VexEmitter.js
@@ -50,7 +51,7 @@ export default class VexEmitter extends VexGroup {
       },
       this.particleLifeSpan,
       {
-        ease: VexTween.Easing.quadOut,
+        ease: VexEase.quadOut,
         onComplete,
       },
     );
