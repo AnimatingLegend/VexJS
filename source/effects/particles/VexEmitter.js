@@ -5,7 +5,7 @@ import VexTween from "../../tweens/VexTween.js";
 /**
  * @file VexEmitter.js
  *
- * Spawns short-lived particles and reuses them through VexGroup recycling to
+ * @description Spawns short-lived particles and reuses them through VexGroup recycling to
  *  avoid repeated allocations during bursts.
  */
 export default class VexEmitter extends VexGroup {
@@ -15,6 +15,7 @@ export default class VexEmitter extends VexGroup {
     this.y = y;
 
     this.particle;
+    this.particleColor = "#ffaa00";
     this.particleFade;
     this.particleLifeSpan = 0.6;
   }
@@ -22,9 +23,10 @@ export default class VexEmitter extends VexGroup {
   // Reuse pooled particles so repeated bursts do not allocate new sprites.
   emit() {
     const particle = this.recycle(() =>
-      new VexSprite(this.x, this.y).makeGraphic(4, 4, "#ffaa00"),
+      new VexSprite(this.x, this.y).makeGraphic(4, 4, this.particleColor),
     );
     this.particle = particle;
+    particle.color = this.particleColor;
     particle.x = this.x;
     particle.y = this.y;
     particle.lifeSpan = this.particleLifeSpan;
