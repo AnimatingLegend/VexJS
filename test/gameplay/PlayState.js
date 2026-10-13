@@ -1,4 +1,5 @@
 import {
+  VexEmitter,
   VexGlobal,
   VexGroup,
   VexState,
@@ -9,8 +10,8 @@ import {
 /**
  * @file PlayState.js
  *
- * @description A minimal "hello world" for Vex.
- * @description A player you move with arrow keys, gravity, a platform to land on, and a camera that follows you.
+ * @description A minimal "hello world" for Vex:
+ *  A player you move with arrow keys, gravity, a platform to land on, and a camera that follows you.
  */
 export default class PlayState extends VexState {
   create() {
@@ -34,6 +35,11 @@ export default class PlayState extends VexState {
     // Initialize the game level.
     this._buildLevel();
     this.levelGravity = 500;
+
+    // Add landing particles.
+    this.landingDust = new VexEmitter(0, 0);
+    this.landingDust.particleColor = "#714f00";
+    this.add(this.landingDust);
 
     // Initalize the games HUD.
     this._buildHUD();
@@ -112,6 +118,8 @@ export default class PlayState extends VexState {
       const isLanding = depth > 0 && depth <= maxDepth;
 
       if (this.player.velocity.y >= 0 && isLanding) {
+        // Trigger landing dust effect ONLY if the player dropped from the air.
+        if (this.player.velocity.y > 100) this._landingEffect();
         // snap the player to the top of the platform and reset downard velocity.
         this.player.y = platform.y - this.player.height;
         this.player.velocity.y = 0;
@@ -131,6 +139,19 @@ export default class PlayState extends VexState {
       }
     });
     return isGrounded;
+  }
+
+  _landingEffect() {
+    var landingDust = this.landingDust;
+    landingDust.x = this.player.x + this.player.width / 2;
+    landingDust.y = this.player.y + this.player.height;
+    // pi = particle index
+    for (var pi = 0; pi < 6; pi++) {
+      landingDust.emit();
+      landingDust.fadeParticle(0.12, 2.75, () => {
+        console.log("VEX EMITTER: Landing dust emitted.");
+      });
+    }
   }
 
   _respawnCharacter() {
