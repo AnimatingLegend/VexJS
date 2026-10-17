@@ -1,4 +1,4 @@
-import VexBasic from "./VexBasic.js";
+import VexObject from "./VexObject.js";
 import VexAnimationController from "./animation/VexAnimationController.js";
 
 /**
@@ -7,24 +7,9 @@ import VexAnimationController from "./animation/VexAnimationController.js";
  * Represents a movable, drawable game object. It combines motion and image
  *  animation so common 2D behavior can be reused by game entities.
  */
-export default class VexSprite extends VexBasic {
+export default class VexSprite extends VexObject {
   constructor(x = 0, y = 0) {
-    super();
-    this.x = x;
-    this.y = y;
-    this.width = 0;
-    this.height = 0;
-
-    this.velocity = { x: 0, y: 0 };
-    this.acceleration = { x: 0, y: 0 };
-    this.drag = { x: 0, y: 0 };
-    this.maxVelocity = { x: 10000, y: 10000 };
-
-    this.angle = 0;
-    this.angularVelocity = 0;
-    this.angularAcceleration = 0;
-    this.angularDrag = 0;
-    this.maxAngular = 10000;
+    super(x, y);
 
     this.scale = { x: 1, y: 1 };
     this.flipX = false;
@@ -85,56 +70,8 @@ export default class VexSprite extends VexBasic {
     return this; // Allow for method chaining
   }
 
-  // Average old and new velocity to reduce position error during acceleration.
-  _updateMotion(dt) {
-    // Keep horizontal motion independent so it can use its own drag and speed limit.
-    const vx = this._computeVelocity(
-      this.velocity.x,
-      this.acceleration.x,
-      this.drag.x,
-      this.maxVelocity.x,
-      dt,
-    );
-    // Vertical motion has separate settings, allowing different movement behavior per axis.
-    const vy = this._computeVelocity(
-      this.velocity.y,
-      this.acceleration.y,
-      this.drag.y,
-      this.maxVelocity.y,
-      dt,
-    );
-    this.x += (this.velocity.x + vx) * 0.5 * dt;
-    this.y += (this.velocity.y + vy) * 0.5 * dt;
-    this.velocity.x = vx;
-    this.velocity.y = vy;
-
-    // Apply the same acceleration and drag rules to rotation as to linear motion.
-    const va = this._computeVelocity(
-      this.angularVelocity,
-      this.angularAcceleration,
-      this.angularDrag,
-      this.maxAngular,
-      dt,
-    );
-    this.angle += (this.angularVelocity + va) * 0.5 * dt;
-    this.angularVelocity = va;
-  }
-
-  // Apply drag only without acceleration, then clamp velocity to avoid reversal or excess speed.
-  _computeVelocity(velocity, acceleration, drag, max, dt) {
-    if (acceleration !== 0) velocity += acceleration * dt;
-    else if (drag !== 0) {
-      const dragForce = drag * dt;
-      if (velocity - dragForce > 0) velocity -= dragForce;
-      else if (velocity + dragForce < 0) velocity += dragForce;
-      else velocity = 0;
-    }
-    if (velocity !== 0) velocity = Math.max(Math.min(velocity, max), -max);
-    return velocity;
-  }
-
   update(dt) {
-    this._updateMotion(dt);
+    super.update(dt);
     this.animationController.update(dt);
   }
 
@@ -182,20 +119,5 @@ export default class VexSprite extends VexBasic {
       ctx.fillRect(-this.width / 2, -this.height / 2, this.width, this.height);
     }
     ctx.restore();
-  }
-
-  // Axis-aligned bounds provide a fast collision check without shape calculations.
-  overlaps(other) {
-    return (
-      this.x < other.x + other.width &&
-      this.x + this.width > other.x &&
-      this.y < other.y + other.height &&
-      this.y + this.height > other.y
-    );
-  }
-
-  // The center is useful for targeting and other position-based calculations.
-  getMidpoint() {
-    return { x: this.x + this.width / 2, y: this.y + this.height / 2 };
   }
 }

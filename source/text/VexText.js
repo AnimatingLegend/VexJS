@@ -1,4 +1,4 @@
-import VexBasic from "../VexBasic.js";
+import VexObject from "../VexObject.js";
 
 /**
  * @file VexText.js
@@ -6,7 +6,7 @@ import VexBasic from "../VexBasic.js";
  * @description Renders text with the canvas API and follows sprite positioning rules so
  *  text can share the same camera and group behavior as other game objects.
  */
-export default class VexText extends VexBasic {
+export default class VexText extends VexObject {
   constructor(x = 0, y = 0, text = "", options = {}) {
     super();
     this.x = x;
