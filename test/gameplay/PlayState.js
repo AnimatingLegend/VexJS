@@ -1,10 +1,11 @@
 import {
   VexEmitter,
+  VexText,
   VexGlobal,
   VexGroup,
-  VexState,
+  VexObject,
   VexSprite,
-  VexText,
+  VexState,
 } from "../../index.js";
 
 /**
@@ -48,8 +49,10 @@ export default class PlayState extends VexState {
   _buildLevel() {
     this.platformGrp = new VexGroup();
     var ground = new VexSprite(0, 500).makeGraphic(650, 50, "#446644");
+    ground.immovable = true;
     this.platformGrp.add(ground);
     var ledge = new VexSprite(300, 400).makeGraphic(180, 20, "#446644");
+    ledge.immovable = true;
     this.platformGrp.add(ledge);
     this.add(this.platformGrp);
   }
@@ -71,10 +74,9 @@ export default class PlayState extends VexState {
   }
 
   update(dt) {
-    super.update(dt);
-    VexGlobal.camera.update(dt);
-
     var player = this.player;
+    var wasGrounded = player.touching.down;
+
     player.acceleration.x = 0;
     player.acceleration.y = this.levelGravity;
 
@@ -95,50 +97,29 @@ export default class PlayState extends VexState {
       VexGlobal.keys.pressed("KeyW") ||
       VexGlobal.keys.pressed("Space")
     ) {
-      if (this._isGrounded()) player.velocity.y = -320;
+      if (wasGrounded) player.velocity.y = -320;
     }
 
+    super.update(dt);
+
+    var fallSpeed = player.velocity.y;
+    this._platformCollision();
+    if (!wasGrounded && player.touching.down && fallSpeed > 100)
+      this._landingEffect();
+
+    VexGlobal.camera.update(dt);
     // If the players gravity exceeds 1000, respawn the player back to its original place.
     if (player.y > 1000) {
       VexGlobal.camera.fade("#000000", 0.5, true);
       this._respawnCharacter();
     }
-
-    this._platformCollision();
   }
 
   _platformCollision() {
     this.platformGrp.forEachAlive((platform) => {
       if (!this.player.overlaps(platform)) return;
-
-      // Calculate how deep the player is embedded in the platform.
-      const depth = this.player.y + this.player.height - platform.y;
-      // Allow snapped ONLY within a small entry window.
-      const maxDepth = 12;
-      const isLanding = depth > 0 && depth <= maxDepth;
-
-      if (this.player.velocity.y >= 0 && isLanding) {
-        // Trigger landing dust effect ONLY if the player dropped from the air.
-        if (this.player.velocity.y > 100) this._landingEffect();
-        // snap the player to the top of the platform and reset downard velocity.
-        this.player.y = platform.y - this.player.height;
-        this.player.velocity.y = 0;
-      }
+      VexObject.collide(this.player, platform);
     });
-  }
-
-  _isGrounded() {
-    var isGrounded = false;
-    this.platformGrp.forEachAlive((platformGrp) => {
-      // Check if the player is colliding with the platform from above.
-      if (
-        this.player.overlaps(platformGrp) &&
-        this.player.y + this.player.height <= platformGrp.y + 10
-      ) {
-        isGrounded = true;
-      }
-    });
-    return isGrounded;
   }
 
   _landingEffect() {
